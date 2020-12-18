@@ -1,2 +1,3 @@
 # svg2ico
-Create multi size .ico from .svg, without rescale.
+
+A SVG to Multi Size ICO Converter, without Rescale
