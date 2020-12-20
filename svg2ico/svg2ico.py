@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pathlib import Path
-import argparse
+from typing import Iterable, Union
 import cairosvg
 
 SIZE = [
@@ -73,9 +72,7 @@ class PngIco:
         return b''.join([self.header, self.directory, *icon_bytes])
 
 
-def svg2ico(src_path, dst_path=None, size=None):
-    src = Path(src_path)
-    dst = Path(dst_path or src.with_suffix('.ico'))
+def svg2ico(src: bytes, size: Union[Iterable[int], None] = None):
     svg_data = src.read_bytes()
     ico = PngIco()
     for s in size or SIZE:
@@ -84,19 +81,5 @@ def svg2ico(src_path, dst_path=None, size=None):
                                 output_width=w, output_height=h)
         png = Png(data)
         ico.append(png)
-    dst.write_bytes(ico.to_bytes())
-    return
+    return ico.to_bytes()
 
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('input', type=Path)
-    parser.add_argument('-o', '--output', type=Path)
-    def tp(x): return list(map(int, x.split(',')))
-    parser.add_argument('-s', '--size', type=tp)
-    args = parser.parse_args()
-    svg2ico(args.input, args.output, args.size)
-
-
-if __name__ == '__main__':
-    main()
